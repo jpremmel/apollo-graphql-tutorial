@@ -39,5 +39,28 @@ export const resolvers = {
       }
       return false;
     }
+  },
+
+  //Local resolver: to perform more complicated local data updates than direct cache writes (such as adding or removing items from a list). The Apollo cache is already added to the context for you; inside your resolver, you'll use the cache to read and write data.
+  //Destructure the Apollo cache from the context in order to read the query that fetches cart items; then add or remove the cart item's id passed into the mutation; then return the updated list from the mutation.
+  Mutation: {
+    addOrRemoveFromCart: (_, { id }, { cache }) => {
+      const queryResult = cache.readQuery({
+        query: GET_CART_ITEMS
+      });
+
+      if (queryResult) {
+        const { cartItems } = queryResult;
+        const data = {
+          cartItems: cartItems.includes(id)
+            ? cartItems.filter(i => i !== id)
+            : [...cartItems, id]
+        };
+
+        cache.writeQuery({ query: GET_CART_ITEMS, data });
+        return data.cartItems;
+      }
+      return [];
+    }
   }
 };
