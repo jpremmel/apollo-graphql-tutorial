@@ -18,6 +18,7 @@ export default function Login() {
   const [login, { loading, error }] = useMutation(LOGIN_USER, {
     onCompleted({ login }) {
       localStorage.setItem("token", login);
+      //direct cache write
       client.writeData({ data: { isLoggedIn: true } });
     }
   });

@@ -7,9 +7,11 @@ import { ActionButton } from "../containers";
 
 import { LAUNCH_TILE_DATA } from "./launches";
 
+//add isInCart virtual field to query & specify the @client directive
 export const GET_LAUNCH_DETAILS = gql`
   query LaunchDetails($launchId: ID!) {
     launch(id: $launchId) {
+      isInCart @client
       site
       rocket {
         type
